@@ -18,6 +18,10 @@ if uploaded_file:
     else:
         st.warning("Tidak ada teks yang berhasil diekstrak, kemungkinan PDF berupa scan atau gambar.")
 
+
+
+
+
 '''
 import streamlit as st
 from transformers import pipeline
@@ -43,8 +47,6 @@ if uploaded_file:
         st.text_area("PDF Content", text, height=400)
     else:
         st.warning("Tidak ada teks yang berhasil diekstrak, kemungkinan PDF berupa scan atau gambar.")
-
-
 @st.cache_resource
 def load_model():
     return pipeline("ner", model="d4data/biomedical-ner-all", aggregation_strategy="simple")
