@@ -1,8 +1,7 @@
-
 import streamlit as st
 from transformers import pipeline
 
-# Load model once
+# Load model NER sekali saja, cache supaya gak reload terus
 @st.cache_resource
 def load_model():
     return pipeline(
@@ -16,54 +15,48 @@ nlp = load_model()
 
 st.set_page_config(page_title="CliniRead - Medical Resume Assistant", layout="wide")
 
-# --- Header ---
+# Header dan deskripsi
 st.title("Understand Your Medical Resume Like Never Before")
-st.write(
-    "CliniRead transforms complex medical records into clear, personalized health insights for you and your caregivers."
-)
+st.write("CliniRead transforms complex medical records into clear, personalized health insights for you and your caregivers.")
 
-# --- File uploader ---
+# File uploader dengan info
 uploaded_file = st.file_uploader(
-    "Upload Your Medical Resume (PDF, DOC, TXT)", 
+    "Upload Your Medical Resume (PDF, DOC, TXT)",
     type=["pdf", "doc", "docx", "txt"],
-    help="Drag & drop your file here or click to browse files"
+    help="Drag and drop file here. Limit 200MB per file."
 )
 
 if uploaded_file:
-    # (Nanti di sini kamu bisa parsing file, extract teks, dll)
-    st.success("File uploaded successfully!")
-    
-    # Contoh sementara: extract teks dari file txt saja (untuk demo)
-    if uploaded_file.type == "text/plain":
-        content = uploaded_file.read().decode("utf-8")
-        st.text_area("Isi dokumen:", content, height=300)
-        
-        # Run NER untuk demo
-        if st.button("Analyze Medical Entities"):
-            results = nlp(content)
-            st.subheader("Detected Medical Entities:")
+    st.success(f"File {uploaded_file.name} berhasil diupload.")
+    # Bisa tambah parsing file di sini nanti sesuai tipe
+
+# Tampilkan konten fe.html kalau perlu (bisa dipakai untuk custom frontend)
+try:
+    with open("fe.html", "r", encoding="utf-8") as f:
+        html_content = f.read()
+    st.markdown(html_content, unsafe_allow_html=True)
+except FileNotFoundError:
+    st.warning("File fe.html tidak ditemukan di repo.")
+
+# Text input untuk coba NER manual
+text_input = st.text_area("Masukkan teks medis di sini:", "The patient has signs of diabetes mellitus and chronic obstructive pulmonary disease.")
+
+if st.button("Proses NER"):
+    if text_input.strip() == "":
+        st.warning("Mohon masukkan teks terlebih dahulu.")
+    else:
+        results = nlp(text_input)
+        if results:
+            st.subheader("Entity yang terdeteksi:")
             for entity in results:
-                st.write(f"- **{entity['word']}** ({entity['entity_group']})")
+                st.write(f"{entity['word']} - ({entity['entity_group']}) [score: {entity['score']:.2f}]")
+        else:
+            st.info("Tidak ada entity yang terdeteksi.")
 
-# --- Sidebar dengan info fitur ---
-st.sidebar.header("Your Complete Health Companion")
-st.sidebar.write("""
-- Medication Breakdown: Clear explanations of prescribed meds  
-- Lab Results Explained: Visual charts and normal ranges  
-- Follow-up Timeline: Recommended appointments and reminders  
-- Condition Summary: Diagnosis overview in plain language  
-- Caregiver Access: Share securely with family  
-- Interactive Q&A: Chat with AI medical assistant  
-""")
-
-# --- Footer ---
+# Footer sederhana
 st.markdown("---")
-st.markdown(
-    """
-    © 2023 CliniRead. All rights reserved.  
-    HIPAA compliant secure upload and storage.
-    """
-)
+st.markdown("© 2023 CliniRead. All rights reserved. HIPAA compliant secure upload and storage.")
+
 
 
 
