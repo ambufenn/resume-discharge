@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliniRead - Your Medical Resume Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B5EAD7',
+                        secondary: '#FFDAC1',
+                        accent: '#C7CEEA',
+                        text: '#5E6472',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chat-container {
+            height: 400px;
+            transition: all 0.3s ease;
+        }
+        .chat-container.collapsed {
+            height: 60px;
+        }
+        .typing-indicator::after {
+            content: '...';
+            animation: typing 1.5s infinite;
+        }
+        @keyframes typing {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+        .file-upload:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .floating-btn {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-primary to-secondary min-h-screen font-sans text-text">
+    <!-- Navigation -->
+    <nav class="bg-white bg-opacity-80 backdrop-blur-md shadow-sm fixed w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-file-medical text-3xl text-accent mr-2"></i>
+                        <span class="text-xl font-bold text-text">CliniRead</span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-4">
+                        <a href="#features" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary hover:bg-opacity-30 transition">Features</a>
+                        <a href="#how-it-works" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary hover:bg-opacity-30 transition">How It Works</a>
+                        <a href="#testimonials" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary hover:bg-opacity-30 transition">Testimonials</a>
+                        <button class="ml-4 px-4 py-2 bg-accent text-white rounded-md hover:bg-opacity-80 transition">Login</button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-text hover:bg-primary hover:bg-opacity-30 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white bg-opacity-90">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary hover:bg-opacity-30">Features</a>
+                <a href="#how-it-works" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary hover:bg-opacity-30">How It Works</a>
+                <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary hover:bg-opacity-30">Testimonials</a>
+                <button class="block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-accent text-white">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Understand Your <span class="text-accent">Medical Resume</span> Like Never Before</h1>
+                <p class="text-lg mb-8">CliniRead transforms complex medical records into clear, personalized health insights for you and your caregivers.</p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button class="px-6 py-3 bg-accent text-white rounded-lg font-medium hover:bg-opacity-80 transition flex items-center justify-center">
+                        <i class="fas fa-cloud-upload-alt mr-2"></i> Upload Your Resume
+                    </button>
+                    <button class="px-6 py-3 border-2 border-accent text-accent rounded-lg font-medium hover:bg-accent hover:bg-opacity-10 transition flex items-center justify-center">
+                        <i class="fas fa-play-circle mr-2"></i> Watch Demo
+                    </button>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-full max-w-md">
+                    <div class="absolute -top-6 -left-6 w-32 h-32 rounded-full bg-secondary bg-opacity-50 z-0"></div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-accent bg-opacity-30 z-0"></div>
+                    <div class="relative z-10 bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="bg-accent py-2 px-4 flex items-center">
+                            <div class="flex space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                            </div>
+                            <div class="ml-4 text-white text-sm">Medical Resume Analysis</div>
+                        </div>
+                        <div class="p-4">
+                            <div class="bg-primary bg-opacity-20 rounded-lg p-4 mb-4">
+                                <div class="font-medium text-accent mb-1">Diagnosis Summary</div>
+                                <p class="text-sm">You were treated for acute bronchitis with possible secondary bacterial infection.</p>
+                            </div>
+                            <div class="bg-secondary bg-opacity-20 rounded-lg p-4 mb-4">
+                                <div class="font-medium text-accent mb-1">Medication Plan</div>
+                                <p class="text-sm">• Amoxicillin 500mg: 1 tablet every 8 hours for 7 days<br>• Ibuprofen 200mg: as needed for fever/pain</p>
+                            </div>
+                            <div class="bg-primary bg-opacity-20 rounded-lg p-4">
+                                <div class="font-medium text-accent mb-1">Follow-up</div>
+                                <p class="text-sm">Schedule a follow-up in 2 weeks if symptoms persist. Rest and increase fluid intake.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- File Upload Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <div class="bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-center mb-2">Upload Your Medical Resume</h2>
+            <p class="text-center mb-8">Get personalized explanations about your treatment, medications, and lab results</p>
+            
+            <div class="file-upload border-2 border-dashed border-accent rounded-xl p-8 text-center transition cursor-pointer hover:border-solid">
+                <input type="file" id="medical-resume" class="hidden" accept=".pdf,.doc,.docx,.txt">
+                <label for="medical-resume" class="cursor-pointer">
+                    <div class="mx-auto w-16 h-16 bg-primary bg-opacity-30 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-file-medical text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-lg font-medium mb-2">Drag & drop your file here</h3>
+                    <p class="text-sm text-gray-500 mb-4">or click to browse files (PDF, DOC, TXT)</p>
+                    <button class="px-4 py-2 bg-accent text-white rounded-md text-sm hover:bg-opacity-80 transition">Select File</button>
+                </label>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-primary bg-opacity-20 rounded-lg p-4 flex items-start">
+                    <div class="bg-primary bg-opacity-40 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i class="fas fa-shield-alt text-xs text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium">Secure Upload</h4>
+                        <p class="text-xs">HIPAA compliant file storage</p>
+                    </div>
+                </div>
+                <div class="bg-secondary bg-opacity-20 rounded-lg p-4 flex items-start">
+                    <div class="bg-secondary bg-opacity-40 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i class="fas fa-bolt text-xs text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium">Fast Analysis</h4>
+                        <p class="text-xs">Results in minutes</p>
+                    </div>
+                </div>
+                <div class="bg-accent bg-opacity-20 rounded-lg p-4 flex items-start">
+                    <div class="bg-accent bg-opacity-40 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i class="fas fa-comments text-xs text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium">Ask Questions</h4>
+                        <p class="text-xs">Chat with our medical assistant</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Your Complete <span class="text-accent">Health Companion</span></h2>
+            <p class="max-w-2xl mx-auto">CliniRead helps you understand every aspect of your medical history and treatment plan</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-primary bg-opacity-30 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-pills text-xl text-accent"></i>
+                </div>
+                <h3 class="text-xl font-medium mb-3">Medication Breakdown</h3>
+                <p class="text-sm">Clear explanations of each prescribed medication, including purpose, dosage instructions, potential side effects, and interactions.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-secondary bg-opacity-30 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-heartbeat text-xl text-accent"></i>
+                </div>
+                <h3 class="text-xl font-medium mb-3">Lab Results Explained</h3>
+                <p class="text-sm">Understand your test results with visual charts showing normal ranges and explanations of what abnormal values might indicate.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-primary bg-opacity-30 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-calendar-check text-xl text-accent"></i>
+                </div>
+                <h3 class="text-xl font-medium mb-3">Follow-up Timeline</h3>
+                <p class="text-sm">Personalized schedule of recommended follow-up appointments and health check reminders based on your condition.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-secondary bg-opacity-30 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-notes-medical text-xl text-accent"></i>
+                </div>
+                <h3 class="text-xl font-medium mb-3">Condition Summary</h3>
+                <p class="text-sm">Simplified overview of your diagnosis in plain language, including typical symptoms, expected recovery timeline, and warning signs.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-primary bg-opacity-30 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-user-shield text-xl text-accent"></i>
+                </div>
+                <h3 class="text-xl font-medium mb-3">Caregiver Access</h3>
+                <p class="text-sm">Securely share your medical resume with family members or caregivers with customizable permission levels.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-secondary bg-opacity-30 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-comment-medical text-xl text-accent"></i>
+                </div>
+                <h3 class="text-xl font-medium mb-3">Interactive Q&A</h3>
+                <p class="text-sm">Get answers to your specific questions about your treatment plan from our AI medical assistant.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white bg-opacity-50">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">How <span class="text-accent">CliniRead</span> Works</h2>
+            <p class="max-w-2xl mx-auto">Three simple steps to better understand your medical resume</p>
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-1/3 mb-10 md:mb-0 px-6">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-primary bg-opacity-30 rounded-full flex items-center justify-center mb-4 text-accent text-2xl font-bold">1</div>
+                    <h3 class="text-xl font-medium mb-3">Upload Your Documents</h3>
+                    <p class="text-sm">Securely upload your medical resume, discharge summary, or lab results in any common format.</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:block">
+                <i class="fas fa-arrow-right text-2xl text-accent opacity-50"></i>
+            </div>
+            
+            <div class="md:w-1/3 mb-10 md:mb-0 px-6">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-secondary bg-opacity-30 rounded-full flex items-center justify-center mb-4 text-accent text-2xl font-bold">2</div>
+                    <h3 class="text-xl font-medium mb-3">AI Analysis</h3>
+                    <p class="text-sm">Our system processes your documents, identifies key information, and creates an easy-to-understand summary.</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:block">
+                <i class="fas fa-arrow-right text-2xl text-accent opacity-50"></i>
+            </div>
+            
+            <div class="md:w-1/3 px-6">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-4 text-accent text-2xl font-bold">3</div>
+                    <h3 class="text-xl font-medium mb-3">Get Insights</h3>
+                    <p class="text-sm">View your personalized health dashboard and chat with our assistant to clarify any questions.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-16 max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="md:flex">
+                <div class="md:w-1/3 bg-accent bg-opacity-10 p-6 flex items-center justify-center">
+                    <i class="fas fa-mobile-alt text-5xl text-accent opacity-70"></i>
+                </div>
+                <div class="p-8 md:w-2/3">
+                    <div class="uppercase tracking-wide text-sm text-accent font-semibold">Mobile Friendly</div>
+                    <h3 class="mt-2 text-xl font-medium">Access Anywhere, Anytime</h3>
+                    <p class="mt-2 text-gray-500">View your medical resume analysis on your phone, tablet, or computer. Receive notifications for medication reminders and follow-up appointments.</p>
+                    <div class="mt-4 flex space-x-4">
+                        <button class="flex items-center text-sm bg-gray-100 rounded-full px-4 py-2">
+                            <i class="fab fa-apple mr-2"></i> App Store
+                        </button>
+                        <button class="flex items-center text-sm bg-gray-100 rounded-full px-4 py-2">
+                            <i class="fab fa-google-play mr-2"></i> Play Store
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">What Our <span class="text-accent">Users Say</span></h2>
+            <p class="max-w-2xl mx-auto">Hear from patients and caregivers who use CliniRead</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-primary bg-opacity-30 flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-accent"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium">Sarah J.</h4>
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm">"After my hospital stay, I was overwhelmed with all the information. CliniRead broke everything down so clearly - especially the medication schedule which was confusing before."</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-secondary bg-opacity-30 flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-accent"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium">Michael T.</h4>
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm">"As a caregiver for my elderly father, CliniRead has been invaluable. The chatbot answers my questions about his medications instantly, and the lab result explanations are so helpful."</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-primary bg-opacity-30 flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-accent"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium">Dr. Lisa M.</h4>
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm">"I recommend CliniRead to my patients regularly. It helps bridge the gap between clinical terminology and patient understanding, leading to better adherence to treatment plans."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-accent bg-opacity-10 rounded-2xl">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold mb-6">Ready to Understand Your <span class="text-accent">Medical Resume</span>?</h2>
+            <p class="max-w-2xl mx-auto mb-8">Join thousands of patients and caregivers who use CliniRead to take control of their health information.</p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button class="px-8 py-3 bg-accent text-white rounded-lg font-medium hover:bg-opacity-80 transition flex items-center justify-center">
+                    <i class="fas fa-cloud-upload-alt mr-2"></i> Upload Your Documents
+                </button>
+                <button class="px-8 py-3 border-2 border-accent text-accent rounded-lg font-medium hover:bg-accent hover:bg-opacity-10 transition flex items-center justify-center">
+                    <i class="fas fa-question-circle mr-2"></i> Learn More
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white bg-opacity-80 mt-16">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">CliniRead</h3>
+                    <p class="text-sm text-gray-500">Making medical resumes understandable for patients and caregivers.</p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Product</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Features</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Pricing</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">FAQ</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">About</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Blog</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Careers</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Privacy</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Terms</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">HIPAA</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-accent">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-500">© 2023 CliniRead. All rights reserved.</p>
+                <div class="mt-4 md:mt-0 flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-accent">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-accent">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-accent">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-accent">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Button -->
+    <button id="chat-toggle" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-accent text-white flex items-center justify-center shadow-lg floating-btn z-20">
+        <i class="fas fa-comment-medical text-xl"></i>
+    </button>
+
+    <!-- Chat Container -->
+    <div id="chat-container" class="chat-container collapsed fixed bottom-20 right-6 w-80 bg-white rounded-t-xl shadow-xl overflow-hidden z-20">
+        <div class="bg-accent text-white p-3 flex justify-between items-center cursor-pointer" id="chat-header">
+            <div class="flex items-center">
+                <i class="fas fa-comment-medical mr-2"></i>
+                <span>CliniRead Assistant</span>
+            </div>
+            <div class="flex space-x-2">
+                <button id="minimize-chat"><i class="fas fa-minus"></i></button>
+                <button id="close-chat"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="p-4 h-full flex flex-col">
+            <div id="chat-messages" class="flex-grow overflow-y-auto mb-4 space-y-3">
+                <div class="text-xs text-center text-gray-500 py-2">Chat started</div>
+                <div class="bg-primary bg-opacity-20 rounded-lg p-3 text-sm">
+                    <div class="font-medium text-accent mb-1">CliniRead Assistant</div>
+                    <p>Hello! I'm here to help you understand your medical resume. You can ask me questions about your diagnosis, medications, lab results, or follow-up care.</p>
+                </div>
+            </div>
+            <div class="relative">
+                <input type="text" id="chat-input" placeholder="Type your question..." class="w-full border border-gray-300 rounded-full py-2 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm">
+                <button id="send-message" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-accent">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Chat functionality
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatContainer = document.getElementById('chat-container');
+        const minimizeChat = document.getElementById('minimize-chat');
+        const closeChat = document.getElementById('close-chat');
+        const chatHeader = document.getElementById('chat-header');
+        const chatInput = document.getElementById('chat-input');
+        const sendMessage = document.getElementById('send-message');
+        const chatMessages = document.getElementById('chat-messages');
+
+        // Toggle chat
+        chatToggle.addEventListener('click', function() {
+            chatContainer.classList.toggle('collapsed');
+        });
+
+        // Minimize chat
+        minimizeChat.addEventListener('click', function(e) {
+            e.stopPropagation();
+            chatContainer.classList.add('collapsed');
+        });
+
+        // Close chat
+        closeChat.addEventListener('click', function(e) {
+            e.stopPropagation();
+            chatContainer.classList.add('hidden');
+            setTimeout(() => {
+                chatContainer.classList.remove('hidden');
+                chatContainer.classList.add('collapsed');
+            }, 300);
+        });
+
+        // Toggle chat with header click
+        chatHeader.addEventListener('click', function() {
+            chatContainer.classList.toggle('collapsed');
+        });
+
+        // Send message
+        function sendChatMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                // Add user message
+                addMessage(message, 'user');
+                chatInput.value = '';
+                
+                // Show typing indicator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'bg-primary bg-opacity-20 rounded-lg p-3 text-sm typing-indicator';
+                typingIndicator.innerHTML = '<div class="font-medium text-accent mb-1">CliniRead Assistant</div><p>Typing</p>';
+                chatMessages.appendChild(typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate bot response after delay
+                setTimeout(() => {
+                    // Remove typing indicator
+                    chatMessages.removeChild(typingIndicator);
+                    
+                    // Add bot response
+                    const responses = [
+                        "Based on your medical resume, you were prescribed antibiotics for a respiratory infection. It's important to complete the full course even if you feel better.",
+                        "Your lab results show slightly elevated white blood cell count, which is consistent with your diagnosis of infection. This should normalize with treatment.",
+                        "You have a follow-up appointment scheduled in 2 weeks to monitor your progress. Let me know if you need help understanding any part of your treatment plan.",
+                        "I notice you were given medication for pain relief. Take this with food to avoid stomach upset, and don't exceed the recommended dosage.",
+                        "Your discharge summary mentions the importance of rest and hydration. Make sure to drink plenty of fluids and avoid strenuous activity while recovering."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse, 'bot');
+                }, 1500);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            if (sender === 'user') {
+                messageDiv.className = 'bg-secondary bg-opacity-20 rounded-lg p-3 text-sm ml-8';
+                messageDiv.innerHTML = `<div class="font-medium text-accent mb-1">You</div><p>${text}</p>`;
+            } else {
+                messageDiv.className = 'bg-primary bg-opacity-20 rounded-lg p-3 text-sm';
+                messageDiv.innerHTML = `<div class="font-medium text-accent mb-1">CliniRead Assistant</div><p>${text}</p>`;
+            }
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message on button click
+        sendMessage.addEventListener('click', sendChatMessage);
+
+        // Send message on Enter key
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        // File upload interaction
+        const fileUpload = document.querySelector('.file-upload');
+        const fileInput = document.getElementById('medical-resume');
+        
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('border-accent', 'bg-primary', 'bg-opacity-20');
+        });
+        
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('border-accent', 'bg-primary', 'bg-opacity-20');
+        });
+        
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('border-accent', 'bg-primary', 'bg-opacity-20');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                // Simulate file upload feedback
+                const label = fileUpload.querySelector('label');
+                label.innerHTML = `
+                    <div class="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-lg font-medium mb-2">${e.dataTransfer.files[0].name}</h3>
+                    <p class="text-sm text-gray-500 mb-4">File ready for analysis</p>
+                    <button class="px-4 py-2 bg-accent text-white rounded-md text-sm hover:bg-opacity-80 transition">Analyze Now</button>
+                `;
+            }
+        });
+        
+        // Handle file selection via button
+        fileInput.addEventListener('change', function() {
+            if (this.files.length) {
+                const label = fileUpload.querySelector('label');
+                label.innerHTML = `
+                    <div class="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-lg font-medium mb-2">${this.files[0].name}</h3>
+                    <p class="text-sm text-gray-500 mb-4">File ready for analysis</p>
+                    <button class="px-4 py-2 bg-accent text-white rounded-md text-sm hover:bg-opacity-80 transition">Analyze Now</button>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
