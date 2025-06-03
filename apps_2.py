@@ -1,5 +1,8 @@
 import streamlit as st
 from transformers import pipeline
+import pdfplumber
+from pdf2image import convert_from_bytes
+import pytesseract
 import re
 
 @st.cache_resource
@@ -8,13 +11,28 @@ def load_model():
 
 nlp = load_model()
 
-st.title("CliniRead: Medical Resume Analyzer")
+st.title("CliniRead with PDF OCR")
 
-uploaded_file = st.file_uploader("Upload your medical resume (TXT only)", type=["txt"])
+uploaded_file = st.file_uploader("Upload your medical resume (PDF)", type=["pdf"])
 
-if uploaded_file is not None:
-    text = uploaded_file.read().decode("utf-8")
-    st.subheader("Resume Text")
+def extract_text_from_pdf(file_bytes):
+    # Try extracting text from PDF (text-based)
+    with pdfplumber.open(file_bytes) as pdf:
+        full_text = ""
+        for page in pdf.pages:
+            full_text += page.extract_text() or ""
+    if full_text.strip():
+        return full_text
+    # If empty, do OCR
+    images = convert_from_bytes(file_bytes.read())
+    text = ""
+    for image in images:
+        text += pytesseract.image_to_string(image)
+    return text
+
+if uploaded_file:
+    text = extract_text_from_pdf(uploaded_file)
+    st.subheader("Extracted Text")
     st.write(text)
     
     if st.button("Analyze"):
