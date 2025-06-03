@@ -1,9 +1,49 @@
 import streamlit as st
+import pdfplumber
+
+st.title("Extract Text from PDF (Non-Scan)")
+
+uploaded_file = st.file_uploader("Upload your PDF file", type=["pdf"])
+
+def extract_text_from_pdf(file):
+    with pdfplumber.open(file) as pdf:
+        pages = [page.extract_text() for page in pdf.pages]
+    return "\n".join([p for p in pages if p])  # gabungkan semua teks halaman
+
+if uploaded_file:
+    text = extract_text_from_pdf(uploaded_file)
+    if text.strip():
+        st.subheader("Extracted Text:")
+        st.text_area("PDF Content", text, height=400)
+    else:
+        st.warning("Tidak ada teks yang berhasil diekstrak, kemungkinan PDF berupa scan atau gambar.")
+
+'''
+import streamlit as st
 from transformers import pipeline
 import pdfplumber
 from pdf2image import convert_from_bytes
 import pytesseract
-import re
+import reimport streamlit as st
+import pdfplumber
+
+st.title("Extract Text from PDF (Non-Scan)")
+
+uploaded_file = st.file_uploader("Upload your PDF file", type=["pdf"])
+
+def extract_text_from_pdf(file):
+    with pdfplumber.open(file) as pdf:
+        pages = [page.extract_text() for page in pdf.pages]
+    return "\n".join([p for p in pages if p])  # gabungkan semua teks halaman
+
+if uploaded_file:
+    text = extract_text_from_pdf(uploaded_file)
+    if text.strip():
+        st.subheader("Extracted Text:")
+        st.text_area("PDF Content", text, height=400)
+    else:
+        st.warning("Tidak ada teks yang berhasil diekstrak, kemungkinan PDF berupa scan atau gambar.")
+
 
 @st.cache_resource
 def load_model():
@@ -75,3 +115,4 @@ if uploaded_file:
                 st.write("-", i)
         else:
             st.write("Tidak ditemukan instruksi khusus.")
+'''
